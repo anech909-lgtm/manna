@@ -82,13 +82,13 @@ const BuildYourBowl = () => {
   };
 
   return (
-    <div className="bg-[var(--color-manna-cream)] rounded-[2rem] p-10 md:p-16 border border-[var(--color-manna-gold)]/20 shadow-xl shadow-black/5 relative overflow-hidden">
-      <div className="text-center mb-16">
-        <h3 className="text-4xl md:text-5xl font-serif text-[var(--color-manna-green)] mb-4">Build Your Bowl</h3>
+    <div className="bg-[var(--color-manna-cream)] rounded-[2rem] p-6 sm:p-10 md:p-16 border border-[var(--color-manna-gold)]/20 shadow-xl shadow-black/5 relative overflow-hidden">
+      <div className="text-center mb-10 sm:mb-16">
+        <h3 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[var(--color-manna-green)] mb-4">Build Your Bowl</h3>
         <p className="text-[var(--color-manna-dark)]/70 font-light">Customize your perfect meal from our fresh, daily-prepared ingredients. Base bowl starts at $12.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-10 sm:mb-16">
         {Object.entries(options).map(([category, items]) => (
           <div key={category}>
             <h4 className="text-lg font-serif text-[var(--color-manna-gold)] mb-6 border-b border-[var(--color-manna-gold)]/20 pb-2 capitalize">{category}</h4>
@@ -96,16 +96,33 @@ const BuildYourBowl = () => {
               {items.map((item, i) => {
                 const isSelected = selections[category as keyof typeof selections].includes(item.name);
                 return (
-                  <li 
+                  <motion.li 
                     key={i} 
-                    className="flex items-center space-x-3 text-sm text-[var(--color-manna-dark)]/80 font-light cursor-pointer group"
+                    whileTap={{ scale: 0.97 }}
+                    animate={{ 
+                      backgroundColor: isSelected ? 'rgba(31, 77, 58, 0.04)' : 'transparent',
+                      borderColor: isSelected ? 'rgba(31, 77, 58, 0.15)' : 'transparent'
+                    }}
+                    className={`flex items-center space-x-3 text-sm font-light cursor-pointer group p-2.5 -mx-2.5 rounded-xl border transition-colors ${isSelected ? 'text-[var(--color-manna-green)] font-medium' : 'text-[var(--color-manna-dark)]/80 border-transparent hover:bg-black/5'}`}
                     onClick={() => toggleSelection(category as keyof typeof selections, item.name)}
                   >
                     <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${isSelected ? 'bg-[var(--color-manna-green)] border-[var(--color-manna-green)]' : 'border-[var(--color-manna-green)]/30 group-hover:border-[var(--color-manna-green)]'}`}>
-                      {isSelected && <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>}
+                      {isSelected && (
+                        <motion.svg 
+                          initial={{ scale: 0, opacity: 0 }} 
+                          animate={{ scale: 1, opacity: 1 }} 
+                          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                          className="w-3 h-3 text-white" 
+                          fill="none" 
+                          viewBox="0 0 24 24" 
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </motion.svg>
+                      )}
                     </div>
                     <span className="flex-grow">{item.name} {item.price > 0 && <span className="text-[var(--color-manna-gold)] text-xs ml-1">(+${item.price})</span>}</span>
-                  </li>
+                  </motion.li>
                 );
               })}
             </ul>
@@ -113,9 +130,9 @@ const BuildYourBowl = () => {
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl p-8 border border-[var(--color-manna-gold)]/20 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[var(--color-manna-gold)]/20 flex flex-col md:flex-row items-center justify-between gap-6 shadow-lg text-center md:text-left">
         <div>
-          <h4 className="text-2xl font-serif text-[var(--color-manna-green)] mb-2">Your Custom Bowl</h4>
+          <h4 className="text-xl sm:text-2xl font-serif text-[var(--color-manna-green)] mb-2">Your Custom Bowl</h4>
           <p className="text-sm text-[var(--color-manna-dark)]/60">
             {Object.values(selections).flat().length > 0 
               ? Object.values(selections).flat().join(', ') 
@@ -128,7 +145,7 @@ const BuildYourBowl = () => {
             href={Object.values(selections).flat().length > 0 ? `https://wa.me/17215266181?text=${encodeURIComponent(`Hi Manna! I'd like to order a Custom Bowl ($${calculateTotal()}):\n\n${Object.entries(selections).filter(([_, items]) => items.length > 0).map(([category, items]) => `${category.charAt(0).toUpperCase() + category.slice(1)}: ${items.join(', ')}`).join('\n')}`)}` : '#'}
             target={Object.values(selections).flat().length > 0 ? "_blank" : "_self"}
             rel="noopener noreferrer"
-            className={`flex-grow md:flex-grow-0 bg-[var(--color-manna-green)] text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium transition-all duration-300 ${Object.values(selections).flat().length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[var(--color-manna-dark)] hover:shadow-xl hover:-translate-y-1'}`}
+            className={`flex-grow md:flex-grow-0 text-center bg-[var(--color-manna-green)] text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium transition-all duration-300 ${Object.values(selections).flat().length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[var(--color-manna-dark)] hover:shadow-xl hover:-translate-y-1'}`}
             onClick={(e) => {
               if (Object.values(selections).flat().length === 0) {
                 e.preventDefault();
@@ -263,24 +280,24 @@ export default function App() {
                 <img src="https://i.postimg.cc/TwBjvM9c/Chat-GPT-Image-Mar-1-2026-04-05-48-PM.png" alt="Manna Logo" className="h-24 md:h-32 w-auto object-contain drop-shadow-2xl" referrerPolicy="no-referrer" />
               </div>
               
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6 leading-[1.1]">
-                Elevate Your Event <br/>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-white mb-6 leading-[1.1]">
+                Elevate Your Event <br className="hidden sm:block" />
                 <span className="italic text-[var(--color-manna-gold-soft)]">Experience</span> with Manna
               </h1>
               
-              <div className="flex items-center space-x-3 text-[var(--color-manna-cream)]/90 text-sm md:text-base uppercase tracking-[0.2em] font-medium mb-10">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[var(--color-manna-cream)]/90 text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] font-medium mb-10">
                 <span>Fresh</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-manna-gold)]"></span>
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[var(--color-manna-gold)]"></span>
                 <span>Nourishing</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-manna-gold)]"></span>
+                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[var(--color-manna-gold)]"></span>
                 <span>Made to Order</span>
               </div>
               
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-                <a href="#experience" className="inline-flex items-center justify-center bg-[var(--color-manna-gold)] text-[var(--color-manna-dark)] px-8 py-4 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-[var(--color-manna-gold-soft)] transition-colors shadow-lg shadow-[var(--color-manna-gold)]/20">
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="#experience" className="inline-flex items-center justify-center bg-[var(--color-manna-gold)] text-[var(--color-manna-dark)] px-6 sm:px-8 py-4 rounded-full text-xs uppercase tracking-widest font-semibold hover:bg-[var(--color-manna-gold-soft)] transition-colors shadow-lg shadow-[var(--color-manna-gold)]/20 text-center">
                   Book the Pastry Cart
                 </a>
-                <a href="#menu" className="inline-flex items-center justify-center border border-[var(--color-manna-gold)] text-[var(--color-manna-gold)] px-8 py-4 rounded-full text-xs uppercase tracking-widest font-medium hover:bg-[var(--color-manna-gold)]/10 transition-colors">
+                <a href="#menu" className="inline-flex items-center justify-center border border-[var(--color-manna-gold)] text-[var(--color-manna-gold)] px-6 sm:px-8 py-4 rounded-full text-xs uppercase tracking-widest font-medium hover:bg-[var(--color-manna-gold)]/10 transition-colors text-center">
                   Order Salad Bowls
                 </a>
               </div>
@@ -294,24 +311,25 @@ export default function App() {
               className="relative hidden md:block"
             >
               <div className="aspect-[4/5] rounded-t-[150px] rounded-b-[20px] overflow-hidden relative shadow-2xl shadow-black/40 border border-[var(--color-manna-gold)]/20 bg-[var(--color-manna-green-secondary)]">
-                <img 
+                <ParallaxCardImage 
                   src="https://images.unsplash.com/photo-1509365465985-25d11c17e812" 
                   alt="Manna Cinnamon Roll Cart" 
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-manna-green)]/80 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-manna-green)]/80 via-transparent to-transparent pointer-events-none"></div>
               </div>
               
               {/* Decorative overlapping image */}
-              <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full overflow-hidden border-4 border-[var(--color-manna-green)] shadow-xl bg-[var(--color-manna-cream)]">
+              <motion.div 
+                style={{ y: y2 }}
+                className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full overflow-hidden border-4 border-[var(--color-manna-green)] shadow-xl bg-[var(--color-manna-cream)]"
+              >
                 <img 
                   src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd" 
                   alt="Fresh salad bowl" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
-              </div>
+              </motion.div>
             </motion.div>
             
           </div>
@@ -319,8 +337,8 @@ export default function App() {
       </section>
 
       {/* About Manna Section */}
-      <section className="py-32 px-6 md:px-12 max-w-7xl mx-auto relative bg-[var(--color-manna-cream)]">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+      <section className="py-20 sm:py-32 px-6 md:px-12 max-w-7xl mx-auto relative bg-[var(--color-manna-cream)]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 sm:gap-16 items-center">
           <div className="md:col-span-5 relative">
             <FadeIn>
               <div className="aspect-[3/4] w-full relative oval-mask overflow-hidden shadow-2xl bg-[var(--color-manna-green-secondary)]">
@@ -339,7 +357,7 @@ export default function App() {
           
           <div className="md:col-span-6 md:col-start-7">
             <FadeIn>
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--color-manna-green)] leading-tight">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--color-manna-green)] leading-tight">
                 Gather. Nourish. Live.
               </h2>
               <div className="w-24 h-1 bg-[var(--color-manna-gold)] mt-8 mb-10 rounded-full"></div>
@@ -361,16 +379,16 @@ export default function App() {
       </section>
 
       {/* Signature Bowls */}
-      <section id="menu" className="py-32 bg-white text-[var(--color-manna-dark)] relative overflow-hidden">
+      <section id="menu" className="py-20 sm:py-32 bg-white text-[var(--color-manna-dark)] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
           <FadeIn>
-            <div className="text-center mb-20">
+            <div className="text-center mb-12 sm:mb-20">
               <span className="text-[var(--color-manna-gold)] text-xs uppercase tracking-[0.2em] font-semibold mb-4 block">Fresh • Nourishing • Made to Order</span>
-              <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--color-manna-green)]">Signature Salad Bowls</h2>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-[var(--color-manna-green)]">Signature Salad Bowls</h2>
             </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-20 sm:mb-32">
             {[
               {
                 title: "Chicken Bowl",
@@ -424,26 +442,26 @@ export default function App() {
       </section>
 
       {/* Cinnamon Roll Cart (Coming Soon) */}
-      <section className="py-32 bg-[var(--color-manna-green)] text-white relative overflow-hidden">
+      <section className="py-20 sm:py-32 bg-[var(--color-manna-green)] text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1509365465985-25d11c17e812')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-manna-green)] via-transparent to-[var(--color-manna-green)]"></div>
         
         <div className="max-w-4xl mx-auto px-6 md:px-12 relative z-10 text-center">
           <FadeIn>
-            <div className="inline-flex items-center justify-center border border-[var(--color-manna-gold)] text-[var(--color-manna-gold)] text-xs uppercase tracking-[0.2em] px-6 py-2 rounded-full mb-8 shadow-[0_0_15px_rgba(198,167,94,0.3)]">
+            <div className="inline-flex items-center justify-center border border-[var(--color-manna-gold)] text-[var(--color-manna-gold)] text-xs uppercase tracking-[0.2em] px-6 py-2 rounded-full mb-6 sm:mb-8 shadow-[0_0_15px_rgba(198,167,94,0.3)]">
               Coming Soon
             </div>
             
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-serif mb-8 leading-tight drop-shadow-lg">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif mb-6 sm:mb-8 leading-tight drop-shadow-lg">
               Cinnamon Roll Cart <br/>
-              <span className="italic text-[var(--color-manna-gold-soft)] text-4xl md:text-5xl lg:text-6xl">– Coming April 2026 –</span>
+              <span className="italic text-[var(--color-manna-gold-soft)] text-2xl sm:text-4xl md:text-5xl lg:text-6xl">– Coming April 2026 –</span>
             </h2>
             
-            <p className="text-xl md:text-2xl text-white/80 font-light leading-relaxed mb-12 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl md:text-2xl text-white/80 font-light leading-relaxed mb-10 sm:mb-12 max-w-2xl mx-auto">
               Warm, fresh, handcrafted cinnamon rolls served from our elegant pastry cart.
             </p>
             
-            <a href="#contact" className="inline-flex items-center justify-center bg-transparent border border-[var(--color-manna-gold)] text-[var(--color-manna-gold)] px-10 py-4 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-[var(--color-manna-gold)] hover:text-[var(--color-manna-dark)] transition-all duration-500 shadow-[0_0_20px_rgba(198,167,94,0.2)] hover:shadow-[0_0_30px_rgba(198,167,94,0.5)]">
+            <a href="#contact" className="inline-flex items-center justify-center bg-transparent border border-[var(--color-manna-gold)] text-[var(--color-manna-gold)] px-8 sm:px-10 py-4 rounded-full text-xs sm:text-sm uppercase tracking-widest font-medium hover:bg-[var(--color-manna-gold)] hover:text-[var(--color-manna-dark)] transition-all duration-500 shadow-[0_0_20px_rgba(198,167,94,0.2)] hover:shadow-[0_0_30px_rgba(198,167,94,0.5)] text-center">
               Join the Waitlist
             </a>
           </FadeIn>
@@ -451,16 +469,16 @@ export default function App() {
       </section>
 
       {/* Event Experience Section */}
-      <section id="experience" className="py-32 bg-[var(--color-manna-cream)] relative border-t border-[var(--color-manna-gold)]/10">
+      <section id="experience" className="py-20 sm:py-32 bg-[var(--color-manna-cream)] relative border-t border-[var(--color-manna-gold)]/10">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <FadeIn>
-            <div className="text-center mb-20">
+            <div className="text-center mb-12 sm:mb-20">
               <span className="text-[var(--color-manna-gold)] text-xs uppercase tracking-[0.2em] font-semibold mb-4 block">Event Pastry Cart</span>
-              <h2 className="text-5xl md:text-6xl text-[var(--color-manna-green)] font-serif">Level Up Your Guest Experience</h2>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl text-[var(--color-manna-green)] font-serif">Level Up Your Guest Experience</h2>
             </div>
           </FadeIn>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-16 items-center">
             {/* Images Grid */}
             <div className="grid grid-cols-2 gap-4 md:gap-6">
               <FadeIn className="col-span-2">
@@ -539,7 +557,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <a href="#contact" className="inline-flex items-center justify-center space-x-3 bg-[var(--color-manna-gold)] text-white px-10 py-5 rounded-full text-sm uppercase tracking-widest font-medium hover:bg-[var(--color-manna-dark)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <a href="#contact" className="inline-flex items-center justify-center space-x-3 bg-[var(--color-manna-gold)] text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full text-xs sm:text-sm uppercase tracking-widest font-medium hover:bg-[var(--color-manna-dark)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto">
                   <CalendarHeart className="w-5 h-5" />
                   <span>Request Event Quote</span>
                 </a>
@@ -550,14 +568,14 @@ export default function App() {
       </section>
 
       {/* Call to Action Section */}
-      <section className="py-32 bg-[var(--color-manna-green)] text-white relative border-t border-[var(--color-manna-gold)]/20">
+      <section className="py-20 sm:py-32 bg-[var(--color-manna-green)] text-white relative border-t border-[var(--color-manna-gold)]/20">
         <div className="max-w-5xl mx-auto px-6 md:px-12 text-center">
           <FadeIn>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif mb-16 text-[var(--color-manna-cream)]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif mb-10 sm:mb-16 text-[var(--color-manna-cream)]">
               Ready to Nourish Your Next Event?
             </h2>
             
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4 sm:gap-6">
               <a href="#experience" className="w-full md:w-auto inline-flex items-center justify-center bg-[var(--color-manna-gold)] text-white px-8 py-4 rounded-full text-xs uppercase tracking-widest font-medium hover:bg-[var(--color-manna-cream)] hover:text-[var(--color-manna-green)] transition-colors duration-300 shadow-lg">
                 Book the Cart
               </a>
@@ -575,25 +593,25 @@ export default function App() {
       </section>
 
       {/* Footer / Contact */}
-      <footer id="contact" className="bg-[var(--color-manna-green)] text-[var(--color-manna-cream)] py-24 relative overflow-hidden border-t border-[var(--color-manna-gold)]/20">
+      <footer id="contact" className="bg-[var(--color-manna-green)] text-[var(--color-manna-cream)] py-16 sm:py-24 relative overflow-hidden border-t border-[var(--color-manna-gold)]/20">
         <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 flex flex-col items-center text-center">
           <FadeIn>
-            <img src="https://i.postimg.cc/TwBjvM9c/Chat-GPT-Image-Mar-1-2026-04-05-48-PM.png" alt="Manna Logo" className="h-24 md:h-32 w-auto object-contain mx-auto mb-8" referrerPolicy="no-referrer" />
-            <p className="text-sm md:text-base uppercase tracking-[0.4em] text-[var(--color-manna-cream)]/80 font-medium mb-16">
+            <img src="https://i.postimg.cc/TwBjvM9c/Chat-GPT-Image-Mar-1-2026-04-05-48-PM.png" alt="Manna Logo" className="h-20 sm:h-24 md:h-32 w-auto object-contain mx-auto mb-6 sm:mb-8" referrerPolicy="no-referrer" />
+            <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[var(--color-manna-cream)]/80 font-medium mb-12 sm:mb-16">
               Gather &bull; Nourish &bull; Live
             </p>
             
-            <div className="flex flex-col items-center space-y-6 mb-16">
-              <a href="mailto:hello@mannafoods.com" className="text-[var(--color-manna-cream)]/70 hover:text-[var(--color-manna-gold)] transition-colors duration-300 font-light flex items-center space-x-3 text-lg">
-                <Mail className="w-5 h-5" />
-                <span>hello@mannafoods.com</span>
+            <div className="flex flex-col items-center space-y-6 mb-12 sm:mb-16 w-full">
+              <a href="mailto:hello@mannafoods.com" className="text-[var(--color-manna-cream)]/70 hover:text-[var(--color-manna-gold)] transition-colors duration-300 font-light flex items-center justify-center space-x-3 text-base sm:text-lg w-full">
+                <Mail className="w-5 h-5 flex-shrink-0" />
+                <span className="truncate">hello@mannafoods.com</span>
               </a>
-              <a href="https://wa.me/7215266181" className="text-[var(--color-manna-cream)]/70 hover:text-[var(--color-manna-gold)] transition-colors duration-300 font-light flex items-center space-x-3 text-lg">
-                <MessageCircle className="w-5 h-5" />
+              <a href="https://wa.me/7215266181" className="text-[var(--color-manna-cream)]/70 hover:text-[var(--color-manna-gold)] transition-colors duration-300 font-light flex items-center justify-center space-x-3 text-base sm:text-lg w-full">
+                <MessageCircle className="w-5 h-5 flex-shrink-0" />
                 <span>+1 (721) 526-6181</span>
               </a>
-              <div className="text-[var(--color-manna-cream)]/70 font-light flex items-center space-x-3 text-lg">
-                <MapPin className="w-5 h-5" />
+              <div className="text-[var(--color-manna-cream)]/70 font-light flex items-center justify-center space-x-3 text-base sm:text-lg w-full">
+                <MapPin className="w-5 h-5 flex-shrink-0" />
                 <span>Find our current location</span>
               </div>
             </div>
